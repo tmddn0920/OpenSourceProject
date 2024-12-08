@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from ocr_processing import process_inbody_image, parse_inbody_data
-from calculations import calculate_bmi, calculate_body_fat_percentage, classify_body_type
+from logic.ocr_processing import process_inbody_image, parse_inbody_data
+from logic.calculations import calculate_bmi, calculate_body_fat_percentage, classify_body_type
+from logic.body_type_messages import get_body_type_message
+from logic.routine_generator import generate_routine, cardio_exercise
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import random
 
 mpl.rcParams['font.family'] = 'Malgun Gothic'  
 mpl.rcParams['axes.unicode_minus'] = False    
@@ -19,7 +20,7 @@ class InbodyApp:
         self.root.configure(bg="#ffffff")
         self.inbody_data = {}
 
-        self.bg_image = tk.PhotoImage(file="C:\\Users\\User\\Desktop\\OpenSourceProject\\HealthSTU\\background.png") 
+        self.bg_image = tk.PhotoImage(file="C:\\Users\\User\\Desktop\\OpenSourceProject\\HealthSTU\\assets\\background.png") 
         self.canvas = tk.Canvas(root, width=800, height=800)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, anchor="nw", image=self.bg_image)  
@@ -45,7 +46,8 @@ class InbodyApp:
 
         help_label = tk.Label(
             help_window,
-            text="HEALTH STU 사용 방법:\n\n"
+            text="HEALTH STU 사용 방법:"
+                 "개발 : 차승우(서울과학기술대학교 컴퓨터공학과)\n\n"
                  "1. '시작하기' 버튼을 눌러 이름과 키를 입력합니다.\n\n"
                  "2. INBODY 데이터를 불러옵니다. 실패 시 직접 입력합니다.\n\n"
                  "3. 결과 보기 버튼을 눌러 신체 정보를 확인합니다.\n\n"
@@ -192,17 +194,11 @@ class InbodyApp:
 
         tk.Label(self.root, text="운동할 부위를 선택하세요:", font=("Arial", 20), bg="#ffffff").pack(pady=20)
 
+        # 운동 부위와 루틴 생성은 routine_generator에서 가져오기
         body_parts = ["어깨", "팔", "가슴", "등", "하체"]
-        exercises = {
-            "어깨": [["사이드 레터럴 레이즈 머신(측면 스트레칭)"], ["밀리터리 프레스", "오버헤드 프레스"], ["덤벨 숄더 프레스", "아놀드 프레스"], ["프론트 레이즈", "업라이트 로우"], ["페이스 풀", "리버스 펙덱 플라이"]],
-            "팔": [["바벨 컬"], ["해머 컬"], ["컨센트레이션 컬", "덤벨 컬"], ["트라이셉스 익스텐션", "케이블 푸쉬 다운"], ["덤벨 오버헤드 익스텐션", "덤벨 킥 백"]],
-            "가슴": [["벤치 프레스", "덤벨 체스트 프레스"], ["인클라인 벤치 프레스", "덤벨 인클라인 체스트 프레스"], ["체스트 프레스 머신"], ["딥스"], ["케이블 플라이", "덤벨 플라이"]],
-            "등": [["풀 다운", "풀업"], ["컨벤셔널 데드리프트", "루마니안 데드리프트"], ["티바 로우", "바벨 로우"], ["하이 로우", "케이블 로우"], ["렛 풀 다운"]],
-            "하체": [["풀 스쿼트"], ["레그 프레스", "핵 스쿼트"], ["레그 컬"], ["레그 익스텐션", "런지"], ["이너 타이", "아웃 타이"]]
-        }
-
         selected_body_part = tk.StringVar(value=body_parts[0])
 
+        # 라디오 버튼으로 부위 선택
         for part in body_parts:
             tk.Radiobutton(
                 self.root,
@@ -213,18 +209,17 @@ class InbodyApp:
                 bg="#ffffff"
             ).pack(anchor="w", padx=50)
 
-        def generate_routine():
+        def generate_routine_callback():
             part = selected_body_part.get()
-            if part in exercises:
-                routine = [random.choice(pair) for pair in exercises[part]]
-                self.show_routine_screen(part, routine)
+            routine = generate_routine(part)  # 수정된 generate_routine 함수 호출
+            self.show_routine_screen(part, routine)
 
         tk.Button(
             self.root,
             text="운동 시작",
             font=("Arial", 16),
             bg="#e2f7d3",
-            command=generate_routine
+            command=generate_routine_callback
         ).pack(pady=20)
 
     def clear_screen(self):
@@ -244,6 +239,23 @@ class InbodyApp:
         for idx, exercise in enumerate(routine, start=1):
             tk.Label(routine_frame, text=f"STEP {idx}: {exercise}", font=("Arial", 16), bg="#ffffff").pack(pady=5)
 
+        # 유산소 운동 추가
+        body_type = self.inbody_data.get("body_type", "")
+        cardio_needed = ["과체중", "비만", "경도 비만", "마른 비만"]
+
+        if body_type in cardio_needed:
+            cardio = cardio_exercise()  # routine_generator에서 가져온 유산소 함수
+            tk.Label(routine_frame, text="오늘의 유산소 운동:", font=("Arial", 18, "bold"), bg="#ffffff").pack(pady=20)
+            tk.Label(routine_frame, text=f"{cardio}", font=("Arial", 16), bg="#ffffff").pack(pady=5)
+
+        tk.Button(
+            routine_frame,
+            text="뒤로가기",
+            font=("Arial", 16),
+            bg="#e2f7d3",
+            command=self.show_exercise_screen
+        ).pack(pady=20)
+
     def display_results(self):
         """몸 상태 화면 표시"""
         try:
@@ -258,46 +270,71 @@ class InbodyApp:
             bmi = calculate_bmi(height, weight)
             body_fat_percentage = calculate_body_fat_percentage(weight, fat)
             body_type = classify_body_type(bmi, body_fat_percentage)
-
+            
+            self.inbody_data["body_type"] = body_type
+            message = get_body_type_message(body_type)
+            
             # 화면 초기화 및 새로운 프레임 생성
             self.clear_screen()
-            results_frame = tk.Frame(self.root, bg="#ffffff")
+            results_frame = tk.Frame(self.root, bg="#ffffff", padx=20, pady=20)  # 전체 프레임 여백 추가
             results_frame.grid(row=0, column=0, sticky="nsew")
 
             self.root.grid_rowconfigure(0, weight=1)
             self.root.grid_columnconfigure(0, weight=1)
 
             # 결과 데이터 표시
-            header_label = tk.Label(results_frame, text=f"{name} 님은 '{body_type}' 입니다!", font=("Arial", 24), bg="#ffffff")
-            header_label.grid(row=0, column=0, columnspan=2, pady=(20, 40))
+            header_label = tk.Label(
+                results_frame,
+                text=f"{name} 님은 '{body_type}' 입니다!",
+                font=("Arial", 24),
+                bg="#ffffff",
+                padx=20,  
+                pady=20
+            )
+            header_label.grid(row=0, column=0, columnspan=2)
+            
+            message_label = tk.Label(
+                results_frame,
+                text=message,
+                font=("Arial", 16),
+                bg="#ffffff",
+                fg="#555555", 
+                padx=20,
+                pady=10
+            )
+            message_label.grid(row=1, column=0, columnspan=2)
 
-            result_frame = tk.Frame(results_frame, bg="#ffffff")
-            result_frame.grid(row=1, column=0, padx=20, pady=10)
+            result_frame = tk.Frame(results_frame, bg="#ffffff", padx=20, pady=20)  # 각 프레임 여백 추가
+            result_frame.grid(row=2, column=0)
 
             tk.Label(result_frame, text=f"체중: {weight:.2f} kg", font=("Arial", 16), bg="#ffffff").pack(anchor="center", pady=5)
             tk.Label(result_frame, text=f"골격근량: {muscle:.2f} kg", font=("Arial", 16), bg="#ffffff").pack(anchor="center", pady=5)
             tk.Label(result_frame, text=f"체지방량: {fat:.2f} kg", font=("Arial", 16), bg="#ffffff").pack(anchor="center", pady=5)
 
-            extra_frame = tk.Frame(results_frame, bg="#ffffff")
-            extra_frame.grid(row=2, column=0, padx=20, pady=10)
+            extra_frame = tk.Frame(results_frame, bg="#ffffff", padx=20, pady=20)
+            extra_frame.grid(row=3, column=0)
 
             tk.Label(extra_frame, text=f"BMI: {bmi:.2f}", font=("Arial", 14), bg="#ffffff").pack(anchor="center", pady=5)
             tk.Label(extra_frame, text=f"체지방률: {body_fat_percentage:.2f}%", font=("Arial", 14), bg="#ffffff").pack(anchor="center", pady=5)
 
             # 그래프 표시
-            graph_frame = tk.Frame(results_frame, bg="#ffffff", width=400, height=400)
-            graph_frame.grid(row=1, column=1, rowspan=2, padx=20, pady=10)
+            graph_frame = tk.Frame(results_frame, bg="#ffffff", width=400, height=400, padx=20, pady=20)
+            graph_frame.grid(row=2, column=1, rowspan=2)
 
             fig = self.create_graph(bmi, body_fat_percentage)
             canvas = FigureCanvasTkAgg(fig, master=graph_frame)
             canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
             canvas.draw()
+            
+            results_frame.grid_rowconfigure(1, weight=1)
+            results_frame.grid_columnconfigure(0, weight=1)
+            results_frame.grid_columnconfigure(1, weight=1)
 
             # 운동하기 버튼
             self.exercise_button = tk.Button(
                 results_frame,
-                text="운동하기",
-                font=("Arial", 20),
+                text="오늘의 운동 루틴 추천받기",
+                font=("Arial", 18),
                 bg="#A9D0F5",
                 command=self.show_exercise_screen
             )

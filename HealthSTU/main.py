@@ -1,10 +1,15 @@
 import tkinter as tk
+import sys
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LOGIC_DIR = os.path.join(BASE_DIR, "logic")
+sys.path.append(BASE_DIR)
+sys.path.append(LOGIC_DIR)
+
 from ui_components import InbodyApp
 
 if __name__ == "__main__":
-    try:
-        root = tk.Tk()
-        app = InbodyApp(root)
-        root.mainloop()
-    except Exception as e:
-        print(f"프로그램 실행 중 오류가 발생했습니다: {e}")
+    root = tk.Tk()
+    app = InbodyApp(root)
+    root.mainloop()
