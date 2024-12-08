@@ -54,7 +54,7 @@ OCR 기능을 사용하려면 Pytesseract가 필요합니다.
         - **macOS/Linux**: `/usr/local/share/tessdata`
 
 ### 3. **파이썬 라이브러리 설치**
-필요한 파이썬 라이브러리를 아래 명령어로 설치하세요.
+필요한 파이썬 라이브러리를 아래 명령어로 설치합니다:
     ```bash
     pip install matplotlib Pillow tk
 
@@ -199,3 +199,6 @@ OCR 기능을 사용하려면 Pytesseract가 필요합니다.
 ---
 
 **HealthSTU**는 위의 기능들을 통해 사용자에게 더욱 개인화된 운동 관리 솔루션을 제공할 계획입니다. 앞으로도 많은 관심과 피드백 부탁드립니다! 💪
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
