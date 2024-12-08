@@ -204,4 +204,4 @@ pip install matplotlib Pillow tk
 **HealthSTU**는 위의 기능들을 통해 사용자에게 더욱 개인화된 운동 관리 솔루션을 제공할 계획입니다. 앞으로도 많은 관심과 피드백 부탁드립니다! 💪
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
