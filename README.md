@@ -44,6 +44,7 @@ OCR 기능을 사용하려면 Pytesseract가 필요합니다.
     아래 명령어를 사용해 Pytesseract 라이브러리를 설치합니다:
     ```bash
     pip install pytesseract
+    ```
 
 3. **한국어 데이터 파일 추가**  
     Tesseract에서 한국어를 지원하려면 한국어 데이터 파일이 필요합니다.  
@@ -55,8 +56,10 @@ OCR 기능을 사용하려면 Pytesseract가 필요합니다.
 
 ### 3. **파이썬 라이브러리 설치**
 필요한 파이썬 라이브러리를 아래 명령어로 설치합니다:
-    ```bash
-    pip install matplotlib Pillow tk
+
+```bash
+pip install matplotlib Pillow tk
+```
 
 ---
 
