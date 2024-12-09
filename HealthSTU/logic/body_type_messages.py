@@ -1,3 +1,4 @@
+# 체형 별 운동 방향성 메세지 출력
 def get_body_type_message(body_type):
     """체형에 따른 메시지 반환"""
     messages = {

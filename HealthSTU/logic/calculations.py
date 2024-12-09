@@ -1,3 +1,4 @@
+# bmi 계산
 def calculate_bmi(height, weight):
     """BMI 계산"""
     if height <= 0 or weight <= 0:
@@ -5,12 +6,14 @@ def calculate_bmi(height, weight):
     height_m = height / 100
     return round(weight / (height_m ** 2), 2)
 
+# 체지방률 계산
 def calculate_body_fat_percentage(weight, body_fat_mass):
     """체지방률 계산"""
     if weight <= 0 or body_fat_mass < 0:
         raise ValueError("체중은 0보다 커야 하며, 체지방량은 음수가 될 수 없습니다.")
     return round((body_fat_mass / weight) * 100, 2)
 
+# 체형 분류
 def classify_body_type(bmi, body_fat_percentage):
     """BMI와 체지방률을 기반으로 체형 분류"""
     if bmi > 23.0:

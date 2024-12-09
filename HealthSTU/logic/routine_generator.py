@@ -1,5 +1,6 @@
 import random
 
+# 운동 루틴 생성
 def generate_routine(part):
     """운동 부위에 따라 루틴 생성"""
     exercises = {
