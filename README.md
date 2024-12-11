@@ -5,14 +5,14 @@
 ---
 
 ## **목차**
-1. [**개발 동기 (Motivation) 🔍**](#개발-동기-motivation)  
-2. [**설치 (Installation) 💻**](#설치-installation)  
-3. [**실행 (Run) ▶️**](#실행-run)  
-4. [**주요 기능 (How It Works?) 🚀**](#주요-기능-how-it-works)  
-5. [**코드 설명 (Explanation) 📜**](#코드-설명-explanation)  
-6. [**파이썬 라이브러리 (Python Libraries) 🐍**](#파이썬-라이브러리-python-libraries)  
-7. [**참고 자료 📚**](#참고-자료)  
-8. [**향후 개발 계획 🌟**](#향후-개발-계획)  
+1. [**개발 동기 (Motivation) 🔍**](#개발-동기-motivation-)  
+2. [**설치 (Installation) 💻**](#설치-installation-)  
+3. [**실행 (Run) ▶️**](#실행-run-)  
+4. [**주요 기능 (How It Works?) 🚀**](#주요-기능-how-it-works-)  
+5. [**코드 설명 (Explanation) 📜**](#코드-설명-explanation-)  
+6. [**파이썬 라이브러리 (Python Libraries) 🐍**](#파이썬-라이브러리-python-libraries-)  
+7. [**참고 자료 📚**](#참고-자료-)  
+8. [**향후 개발 계획 🌟**](#향후-개발-계획-)  
 
 ---
 
@@ -70,15 +70,29 @@ pip install matplotlib Pillow tk
 **main.py** 항목을 실행합니다.
 - 메인 화면에서는 시작하기, 사용 방법을 확인할 수 있습니다.
 
+![메인 화면](images/main.PNG)
+![사용 방법](images/howtouse.PNG)
+
 프로그램을 시작하면 이름과 키, 그리고 인바디 데이터를 입력하게 됩니다.
-인바디 데이터는 스마트폰의 인바디 앱 내 이미지를 통해 가져올 수 있습니다. 
+인바디 데이터는 스마트폰의 인바디 앱 내 이미지를 통해 가져올 수 있습니다.
+이미지를 삽입할 때는 화면을 캡처한 후, 불필요한 부분을 제거하고 예시 이미지와 같게 잘라서 사용해 주세요.
+
+![입력 화면](images/input.PNG)
+![예시](images/InbodyData.jpg)
+
 
 프로그램은 입력된 데이터를 바탕으로 BMI와 체지방률을 계산하고, 사용자의 체형을 분석합니다. 결과는 숫자와 그래프로 시각화되어 신체 정보를 쉽게 확인할 수 있습니다.
+
+![결과 화면](images/result.PNG)
 
 운동하기 버튼을 통해 운동 루틴을 생성할 수 있습니다. 운동 루틴은 사용자의 체형에 맞춰 맞춤 루틴으로 생성됩니다.
 원하는 운동 부위를 골라 최적의 운동 루틴을 확인할 수 있습니다.
 
+![운동 선택 화면](images/routine_select.PNG)
+
 운동 체크리스트를 통해 진행 상황을 기록할 수 있습니다. 
+
+![루틴 확인 화면](images/complete.PNG)
 
 ---
 
